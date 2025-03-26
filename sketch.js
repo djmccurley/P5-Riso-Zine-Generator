@@ -2,6 +2,7 @@ let searchInput;
 let articles = [];
 let articleImages = [];
 let searchButton;
+let layoutButton;
 let font1;
 let font2;
 let light;
@@ -15,6 +16,7 @@ function preload() {
 
 function setup() {
     createCanvas(5100, 3300);
+    //canvas: 5100x3300
     //each pane: 1200 x 1500
     //page 1: x 3825 - 5025, y 1725, 3225
     //page 8: x 2625 - 3825, y 1725, 3225
@@ -36,6 +38,12 @@ function setup() {
     searchButton.size(100, 40);
     searchButton.mousePressed(searchWikipedia);
     
+    // create layout button
+    layoutButton = createButton('Change Layout');
+    layoutButton.position(width/2 + 320, height + 20);
+    layoutButton.size(100, 40);
+    layoutButton.mousePressed(setLayout);
+
     // Initial search
     searchWikipedia();
 
@@ -51,6 +59,19 @@ function setup() {
     light.angleMode(DEGREES);
     dark.cutout(light);
 
+    //sets initial layout
+    setLayout();
+}
+
+
+
+function getRandom(min, max){
+    let random = Math.floor(Math.random() * (max - min + 1)) + min;
+    console.log(random);
+    return random;
+}
+
+function setLayout(){
     //PAGE LAYOUT DIMENSIONS
     //each pane: 1200 x 1500
     //page 1: x 3825 - 5025, y 1725, 3225
@@ -62,24 +83,15 @@ function setup() {
     // MOVE THIS OUT OF SETUP AND PUT BEFORE EVERYTHING
     //  THEN CREATE A BUTTON that fires a FUNCTION TO UPDATE THE RAndom variables
     // ie. keep data refresh and layout refresh sepearatE!!!!
-    console.log(params);
+    
+    params = {};
     params = {
         "page1": {
             //item: [x(min, max), y(min, max), widthInPx(min, max), heightInPx(min, max)]
             title: [getRandom(0, 4425), getRandom(0, 2700), getRandom(400, 800), getRandom(600, 1000)]
         }
-    }
-    console.log(params);
+    };
 }
-
-
-
-function getRandom(min, max){
-    let random = Math.floor(Math.random() * (max - min + 1)) + min;
-    console.log(random);
-    return random;
-}
-
 // Function to strip HTML tags
 function stripHtmlTags(text) {
     if (!text) return '';
