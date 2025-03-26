@@ -9,6 +9,8 @@ let light;
 let dark;
 let params;
 
+// let testSpread
+
 function preload() {
   font1 = loadFont('/assets/pirata.ttf');
   font2 = loadFont('/assets/inconsolata-bold.ttf');
@@ -61,6 +63,8 @@ function setup() {
 
     //sets initial layout
     setLayout();
+
+    // testSpread = new Spread(75, 75, false, light, dark);
 }
 
 
@@ -88,7 +92,17 @@ function setLayout(){
             subtitle: [4950, getRandom(1800, 3100)],
             issue: ["Issue #" + getRandom(1,100), getRandom(3900, 4950), getRandom(1800, 3100)],
             image1: [3975, 1725, 1050, 1400],
-            image2: [getRandom(3825, 4450), getRandom(1725, 2225), getRandom(300, 400), getRandom(400, 500)]
+            image2: [getRandom(3825, 4825), getRandom(1725, 2825), getRandom(300, 400), getRandom(400, 500)]
+        },
+        "page8": {
+            "contents": {
+                x: getRandom(2625, 3225),
+                y: getRandom(1725, 2825)
+            },
+            "about": {
+                x: getRandom(2625, 3225),
+                y: getRandom(1725, 2825)
+            }
         }
     };
 }
@@ -170,6 +184,8 @@ function draw() {
     background("beige");
     clearRiso();
 
+    // testSpread.draw()
+
     //guides
     push();
       stroke("lightblue");
@@ -184,6 +200,12 @@ function draw() {
       line(width*.75, 0, width*.75, height);
     pop();  
 
+    dark.push();
+        dark.rotate(180);    
+        dark.translate(-2475, -1575);
+        
+        dark.rect(0, 0, 120, 90);
+    dark.pop();
 
     // Only draw if 4 articles with images and snippets are loaded
     if (articles.length === 4 && articleImages.length === 4 && articleImages.every(img => img !== null)) {
@@ -201,6 +223,7 @@ function draw() {
         dark.textFont(font2);
         dark.textLeading(40);
         dark.text("A procedurally generated wikizine", ...params["page1"]["subtitle"]);
+        dark.textAlign(LEFT, TOP);
         dark.text(...params["page1"]["issue"]);
         
         //images
@@ -209,14 +232,22 @@ function draw() {
         light.image(p1MainImage, ...params["page1"]["image1"]);
         dark.image(p1SmallImage, ...params["page1"]["image2"]);
         
-        // function drawWithSpread() {
-        //     const textParams = ["Hello", 10, 50];
-        //     text(...textParams);
-        //   }
+        //PAGE 8
+        dark.textAlign(LEFT, TOP);
+        dark.textSize(40);
+        dark.textFont(font2);
+        dark.textLeading(40);
+        contentsX = params["page8"]["contents"]["x"];
+        contentsY = params["page8"]["contents"]["y"];
+        dark.text("In this issue:", contentsX, contentsY-40);
+        for (i=0; i < articles.length; i+=1){
+            dark.text(articles[i].title, contentsX, contentsY + (40 * i));
+        }
+        aboutX = params["page8"]["about"]["x"];
+        aboutY = params["page8"]["about"]["y"];
+        dark.text("This wikizine was procedurally generated using p5.js, p5.riso and the Wikipedia API.", aboutX, aboutY, 500);
         
-        // function getrandom(min, max){
-        //      return random int in range min-max
-        //  }
+
         drawRiso();
     }
     // If fewer than 4 articles with images and snippets are found
@@ -228,3 +259,24 @@ function draw() {
     }
 
 }
+
+// class Spread {
+//     constructor(translateX, translateY, flip=false, light, dark, page) {
+//         this.x = translateX;
+//         this.y = translateY;
+//         this.flip = flip;
+//         this.light = light;
+//         this.dark = dark;
+//     }
+
+//     draw() {
+//         push();
+//         translate(this.x, this.y)
+//         angleMode(DEGREES);
+//         if (this.flip) {
+//             rotate(180);
+//         }
+//         rect(0,0, 120, 90);
+//         pop();
+//     }
+// }
