@@ -11,7 +11,7 @@ let params;
 
 function preload() {
   font1 = loadFont('/assets/pirata.ttf');
-  font2 = loadFont('/assets/inconsolata.ttf');
+  font2 = loadFont('/assets/inconsolata-bold.ttf');
 }
 
 function setup() {
@@ -52,7 +52,7 @@ function setup() {
 	  light.fill(200);
 
 	  dark = new Riso("BLACK");
-	  dark.fill(180);
+	  dark.fill(200);
   
     //setup
     dark.angleMode(DEGREES);
@@ -79,16 +79,16 @@ function setLayout(){
     //page 2-3 (rotate updside down): x 2625 - 5025, y 75, 1575
     //page 4-5 (rotate updside down): x 75 - 2425, y 75, 1575
     //pages 6-7: x 75 - 2475, y 1725, 3225
-
-    // MOVE THIS OUT OF SETUP AND PUT BEFORE EVERYTHING
-    //  THEN CREATE A BUTTON that fires a FUNCTION TO UPDATE THE RAndom variables
-    // ie. keep data refresh and layout refresh sepearatE!!!!
     
+    //item: [x(min, max), y(min, max), widthInPx(min, max), heightInPx(min, max)]
     params = {};
     params = {
         "page1": {
-            //item: [x(min, max), y(min, max), widthInPx(min, max), heightInPx(min, max)]
-            title: [getRandom(0, 4425), getRandom(0, 2700), getRandom(400, 800), getRandom(600, 1000)]
+            title: [3900, getRandom(1875, 2700), 1200, 1200],
+            subtitle: [4950, getRandom(1800, 3100)],
+            issue: ["Issue #" + getRandom(1,100), getRandom(3900, 4950), getRandom(1800, 3100)],
+            image1: [3975, 1725, 1050, 1400],
+            image2: [getRandom(3825, 4450), getRandom(1725, 2225), getRandom(300, 400), getRandom(400, 500)]
         }
     };
 }
@@ -187,18 +187,27 @@ function draw() {
 
     // Only draw if 4 articles with images and snippets are loaded
     if (articles.length === 4 && articleImages.length === 4 && articleImages.every(img => img !== null)) {
-        light.textFont(font1);
-        light.textSize(280);
-        light.textLeading(230);
-        light.text(articles[0].title, ...params["page1"]["title"]);
-        light.textSize(78);
-        light.textFont(font2);
-        light.textLeading(76);
-        light.text("A procedurally generated wikizine", width-800, height-1200, 800);
-        light.text(articles[0].snippet, width-800, height-1200, 800);
+        // PAGE 1
+        // TITLE
+        dark.textAlign(LEFT, TOP);
+        dark.textFont(font1);
+        dark.textSize(204);
+        dark.textLeading(192);
+        dark.text(articles[0].title, ...params["page1"]["title"]);
 
-        dithered = ditherImage(articleImages[0], 'none', 85);
-        dark.image(dithered, 4000, 2000, 800, 1100);
+        //subtitle and issue #
+        dark.textAlign(RIGHT, TOP);
+        dark.textSize(40);
+        dark.textFont(font2);
+        dark.textLeading(40);
+        dark.text("A procedurally generated wikizine", ...params["page1"]["subtitle"]);
+        dark.text(...params["page1"]["issue"]);
+        
+        //images
+        p1MainImage = ditherImage(articleImages[0], 'none', 100);
+        p1SmallImage = ditherImage(articleImages[1], 'none', 90);
+        light.image(p1MainImage, ...params["page1"]["image1"]);
+        dark.image(p1SmallImage, ...params["page1"]["image2"]);
         
         // function drawWithSpread() {
         //     const textParams = ["Hello", 10, 50];
