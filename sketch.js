@@ -9,7 +9,7 @@ let light;
 let dark;
 let params;
 
-// let testSpread
+// let testSpread;
 
 function preload() {
   font1 = loadFont('/assets/pirata.ttf');
@@ -64,7 +64,7 @@ function setup() {
     //sets initial layout
     setLayout();
 
-    // testSpread = new Spread(75, 75, false, light, dark);
+    // testSpread = new Spread(75, 75, false);
 }
 
 
@@ -87,22 +87,52 @@ function setLayout(){
     //item: [x(min, max), y(min, max), widthInPx(min, max), heightInPx(min, max)]
     params = {};
     params = {
+        issueNumber: getRandom(1, 100), 
         "page1": {
-            title: [3900, getRandom(1875, 2700), 1200, 1200],
-            subtitle: [4950, getRandom(1800, 3100)],
-            issue: ["Issue #" + getRandom(1,100), getRandom(3900, 4950), getRandom(1800, 3100)],
-            image1: [3975, 1725, 1050, 1400],
-            image2: [getRandom(3825, 4825), getRandom(1725, 2825), getRandom(300, 400), getRandom(400, 500)]
+            translate: [3825, 1725],
+            title: [75, getRandom(150, 1000), 1200, 1200],
+            subtitle: [1125, getRandom(75, 1375)],
+            issue: [getRandom(75, 1125), getRandom(75, 1375)],
+            image1: [150, 0, 1050, 1400],
+            image2: [getRandom(0, 800), getRandom(0, 1000), getRandom(300, 400), getRandom(400, 500)]
         },
         "page8": {
+            translate: [2625, 1725],
             "contents": {
-                x: getRandom(2625, 3225),
-                y: getRandom(1725, 2825)
+                x: getRandom(0, 600),
+                y: getRandom(0, 1100)
             },
             "about": {
-                x: getRandom(2625, 3225),
-                y: getRandom(1725, 2825)
-            }
+                x: getRandom(0, 200),
+                y: getRandom(0, 1100)
+            },
+            image: [getRandom(0, 600), getRandom(0, 700), 600, 800],
+            imageSrc: getRandom(0,3)
+        },
+        "page2": {
+            translate: [5025, 1575],
+            text: [getRandom(0, 275), getRandom(200,1000), 900],
+            image: [getRandom(0, 600), getRandom(0, 700), 600, 800]
+        },
+        "page3": {
+            translate: [3825, 1575],
+            text: [getRandom(0, 275), getRandom(200,1000), 900],
+            image: [getRandom(0, 600), getRandom(0, 700), 600, 800]
+        },
+        "page4": {
+            translate: [2425, 1575],
+            text: [getRandom(0, 275), getRandom(200,1000), 900],
+            image: [getRandom(0, 600), getRandom(0, 700), 600, 800]
+        },
+        "page6": {
+            translate: [75, 1725],
+            text: [getRandom(0, 275), getRandom(200,1000), 900],
+            image: [getRandom(0, 600), getRandom(0, 700), 600, 800]
+        },
+        "page7": {
+            translate: [1275, 1725],
+            text: [getRandom(0, 275), getRandom(200,1000), 900],
+            image: [getRandom(0, 600), getRandom(0, 700), 600, 800]
         }
     };
 }
@@ -184,7 +214,6 @@ function draw() {
     background("beige");
     clearRiso();
 
-    // testSpread.draw()
 
     //guides
     push();
@@ -200,53 +229,173 @@ function draw() {
       line(width*.75, 0, width*.75, height);
     pop();  
 
-    dark.push();
-        dark.rotate(180);    
-        dark.translate(-2475, -1575);
-        
-        dark.rect(0, 0, 120, 90);
-    dark.pop();
+    // testSpread.draw()
 
     // Only draw if 4 articles with images and snippets are loaded
     if (articles.length === 4 && articleImages.length === 4 && articleImages.every(img => img !== null)) {
         // PAGE 1
-        // TITLE
-        dark.textAlign(LEFT, TOP);
-        dark.textFont(font1);
-        dark.textSize(204);
-        dark.textLeading(192);
-        dark.text(articles[0].title, ...params["page1"]["title"]);
 
-        //subtitle and issue #
-        dark.textAlign(RIGHT, TOP);
-        dark.textSize(40);
-        dark.textFont(font2);
-        dark.textLeading(40);
-        dark.text("A procedurally generated wikizine", ...params["page1"]["subtitle"]);
-        dark.textAlign(LEFT, TOP);
-        dark.text(...params["page1"]["issue"]);
+        dark.push();
+        light.push();
+            dark.translate(...params["page1"]["translate"]);
+            light.translate(...params["page1"]["translate"]);
+            // TITLE
+            dark.textAlign(LEFT, TOP);
+            dark.textFont(font1);
+            dark.textSize(204);
+            dark.textLeading(192);
+            dark.text(articles[0].title, ...params["page1"]["title"]);
+
+            //subtitle and issue #
+            dark.textAlign(RIGHT, TOP);
+            dark.textSize(40);
+            dark.textFont(font2);
+            dark.textLeading(40);
+            dark.text("A procedurally generated wikizine", ...params["page1"]["subtitle"]);
+            
+            
+            dark.textAlign(LEFT, TOP);
+            dark.text("Issue #" + params["issueNumber"], ...params["page1"]["issue"]);
+            
+            //images
+            p1MainImage = ditherImage(articleImages[0], 'none', 100);
+            p1SmallImage = ditherImage(articleImages[1], 'none', 90);
+            light.image(p1MainImage, ...params["page1"]["image1"]);
+            dark.image(p1SmallImage, ...params["page1"]["image2"]);
         
-        //images
-        p1MainImage = ditherImage(articleImages[0], 'none', 100);
-        p1SmallImage = ditherImage(articleImages[1], 'none', 90);
-        light.image(p1MainImage, ...params["page1"]["image1"]);
-        dark.image(p1SmallImage, ...params["page1"]["image2"]);
-        
+        light.pop();
+        dark.pop();
+
+        //PAGE 2 SPREAD
+        dark.push();
+        light.push();
+            // TITLE
+            dark.translate(...params["page2"]["translate"]);
+            light.translate(...params["page2"]["translate"]);
+            dark.rotate(180);
+            light.rotate(180);
+            dark.textAlign(LEFT, BOTTOM);
+            dark.textFont(font1);
+            dark.textSize(84);
+            dark.textLeading(72);
+            dark.text(articles[0].title, ...params["page2"]["text"]);
+            
+            //snippet
+            dark.textAlign(LEFT, TOP);
+            dark.textFont(font2);
+            dark.textSize(40);
+            dark.textLeading(40);
+            dark.text(articles[0].snippet, ...params["page2"]["text"]);        
+
+            //image
+            spreadImage6 = ditherImage(articleImages[0], 'none', 100);
+            light.image(spreadImage6, ...params["page2"]["image"]);
+        light.pop();
+        dark.pop();
+
+        //PAGE 2 SPREAD
+        dark.push();
+        light.push();
+            // TITLE
+            dark.translate(...params["page3"]["translate"]);
+            light.translate(...params["page3"]["translate"]);
+            dark.rotate(180);
+            light.rotate(180);
+            dark.textAlign(LEFT, BOTTOM);
+            dark.textFont(font1);
+            dark.textSize(84);
+            dark.textLeading(72);
+            dark.text(articles[1].title, ...params["page3"]["text"]);
+            
+            //snippet
+            dark.textAlign(LEFT, TOP);
+            dark.textFont(font2);
+            dark.textSize(40);
+            dark.textLeading(40);
+            dark.text(articles[1].snippet, ...params["page3"]["text"]);        
+
+            //image
+            spreadImage6 = ditherImage(articleImages[1], 'none', 100);
+            light.image(spreadImage6, ...params["page3"]["image"]);
+        light.pop();
+        dark.pop();
+
+
+        //PAGE 6 SPREAD
+        dark.push();
+        light.push();
+            // TITLE
+            dark.translate(...params["page6"]["translate"]);
+            light.translate(...params["page6"]["translate"]);
+            dark.textAlign(LEFT, BOTTOM);
+            dark.textFont(font1);
+            dark.textSize(84);
+            dark.textLeading(72);
+            dark.text(articles[2].title, ...params["page6"]["text"]);
+            
+            //snippet
+            dark.textAlign(LEFT, TOP);
+            dark.textFont(font2);
+            dark.textSize(40);
+            dark.textLeading(40);
+            dark.text(articles[2].snippet, ...params["page6"]["text"]);        
+
+            //image
+            spreadImage6 = ditherImage(articleImages[2], 'none', 100);
+            light.image(spreadImage6, ...params["page6"]["image"]);
+        light.pop();
+        dark.pop();
+
+        //PAGE 7 SPREAD
+        dark.push();
+        light.push();
+            // TITLE
+            dark.translate(...params["page7"]["translate"]);
+            light.translate(...params["page7"]["translate"]);
+            dark.textAlign(LEFT, BOTTOM);
+            dark.textFont(font1);
+            dark.textSize(84);
+            dark.textLeading(72);
+            dark.text(articles[3].title, ...params["page7"]["text"]);
+            
+            //snippet
+            dark.textAlign(LEFT, TOP);
+            dark.textFont(font2);
+            dark.textSize(40);
+            dark.textLeading(40);
+            dark.text(articles[3].snippet, ...params["page7"]["text"]);        
+
+            //image
+            spreadImage6 = ditherImage(articleImages[3], 'none', 100);
+            light.image(spreadImage6, ...params["page7"]["image"]);
+        light.pop();
+        dark.pop();
+
         //PAGE 8
-        dark.textAlign(LEFT, TOP);
-        dark.textSize(40);
-        dark.textFont(font2);
-        dark.textLeading(40);
-        contentsX = params["page8"]["contents"]["x"];
-        contentsY = params["page8"]["contents"]["y"];
-        dark.text("In this issue:", contentsX, contentsY-40);
-        for (i=0; i < articles.length; i+=1){
-            dark.text(articles[i].title, contentsX, contentsY + (40 * i));
-        }
-        aboutX = params["page8"]["about"]["x"];
-        aboutY = params["page8"]["about"]["y"];
-        dark.text("This wikizine was procedurally generated using p5.js, p5.riso and the Wikipedia API.", aboutX, aboutY, 500);
-        
+        dark.push();
+        light.push();
+            dark.translate(...params["page8"]["translate"]);
+            light.translate(...params["page8"]["translate"]);
+            dark.textAlign(LEFT, TOP);
+            dark.textSize(40);
+            dark.textFont(font2);
+            dark.textLeading(40);
+            contentsX = params["page8"]["contents"]["x"];
+            contentsY = params["page8"]["contents"]["y"];
+            dark.text("In this issue:", contentsX, contentsY-40);
+            for (i=0; i < articles.length; i+=1){
+                dark.text(articles[i].title, contentsX, contentsY + (40 * i));
+            }
+            aboutX = params["page8"]["about"]["x"];
+            aboutY = params["page8"]["about"]["y"];
+            
+            dark.text("About this issue:", aboutX, aboutY, 500);
+            dark.text("This magazine was procedurally generated using p5.js, p5.riso.js, and the Wikipedia API. All opinions expressed within are solely those of the algorithm. Previous issues are not available on demand but you might get lucky.", aboutX, aboutY+40, 1000);
+
+            p8Image = ditherImage(articleImages[params["page8"]["imageSrc"]], 'none', 100);
+            light.image(p8Image, ...params["page8"]["image"]);
+        light.pop();
+        dark.pop();
 
         drawRiso();
     }
@@ -261,22 +410,20 @@ function draw() {
 }
 
 // class Spread {
-//     constructor(translateX, translateY, flip=false, light, dark, page) {
+//     constructor(translateX, translateY, flip=false) {
 //         this.x = translateX;
 //         this.y = translateY;
 //         this.flip = flip;
-//         this.light = light;
-//         this.dark = dark;
 //     }
 
 //     draw() {
 //         push();
-//         translate(this.x, this.y)
-//         angleMode(DEGREES);
-//         if (this.flip) {
-//             rotate(180);
-//         }
-//         rect(0,0, 120, 90);
+//             translate(this.x, this.y)
+//             if (this.flip) {
+//                 rotate(180);
+//             }
+//             fill(10);
+
 //         pop();
 //     }
 // }
