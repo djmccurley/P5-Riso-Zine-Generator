@@ -60,7 +60,7 @@ function setup() {
     light = new Riso("FLUORESCENTPINK");
 	  light.fill(200);
 
-	  dark = new Riso("BLACK`");
+	  dark = new Riso("BLACK");
 	  dark.fill(200);
   
     //setup
