@@ -18,6 +18,7 @@ function preload() {
 
 function setup() {
     createCanvas(5100, 3300);
+    pixelDensity(1);
     //canvas: 5100x3300
     //each pane: 1200 x 1500
     //page 1: x 3825 - 5025, y 1725, 3225
@@ -46,6 +47,12 @@ function setup() {
     layoutButton.size(100, 40);
     layoutButton.mousePressed(setLayout);
 
+    // create export button
+    exportButton = createButton('Export Layers');
+    exportButton.position(width/2 + 480, height + 20);
+    exportButton.size(100, 40);
+    exportButton.mousePressed(exportRiso);
+
     // Initial search
     searchWikipedia();
 
@@ -53,7 +60,7 @@ function setup() {
     light = new Riso("FLUORESCENTPINK");
 	  light.fill(200);
 
-	  dark = new Riso("BLACK");
+	  dark = new Riso("BLACK`");
 	  dark.fill(200);
   
     //setup
@@ -119,10 +126,12 @@ function setLayout(){
             text: [getRandom(0, 275), getRandom(200,1000), 900],
             image: [getRandom(0, 600), getRandom(0, 700), 600, 800]
         },
-        "page4": {
-            translate: [2425, 1575],
-            text: [getRandom(0, 275), getRandom(200,1000), 900],
-            image: [getRandom(0, 600), getRandom(0, 700), 600, 800]
+        "page5": {
+            translate: [75, 1575],
+            title: [75, 2262], //left bottom
+            issue: [1425, 2262], //right bottom
+            image: [75, 75, 1350, 2100],
+            imageSrc: getRandom(1,3)
         },
         "page6": {
             translate: [75, 1725],
@@ -320,6 +329,36 @@ function draw() {
         light.pop();
         dark.pop();
 
+        //PAGE 5 CENTERFOLD
+        dark.push();
+        light.push();
+
+
+            dark.translate(...params["page5"]["translate"]);
+            light.translate(...params["page5"]["translate"]);
+            dark.rotate(-90);
+            light.rotate(-90);
+
+            // background
+            //light.rect(0,0, 1500, 2400);
+
+            // TITLE
+            dark.textAlign(LEFT, BOTTOM);
+            dark.textFont(font1);
+            dark.textSize(60);
+            dark.textLeading(60);
+            dark.text(articles[0].title, ...params["page5"]["title"]);
+            dark.textAlign(RIGHT, BOTTOM);
+            dark.text("Issue #" + params["issueNumber"], ...params["page5"]["issue"]);
+
+            //image
+            p5Image = ditherImage(articleImages[0], 'none', 80);
+            p5Image2 = ditherImage(articleImages[params["page5"]["imageSrc"]], 'none', 80);
+            light.image(p5Image, ...params["page5"]["image"]);
+            dark.image(p5Image2, ...params["page5"]["image"]);
+
+        light.pop();
+        dark.pop();
 
         //PAGE 6 SPREAD
         dark.push();
@@ -389,7 +428,7 @@ function draw() {
             aboutX = params["page8"]["about"]["x"];
             aboutY = params["page8"]["about"]["y"];
             
-            dark.text("About this issue:", aboutX, aboutY, 500);
+            dark.text("Note from the editor:", aboutX, aboutY, 500);
             dark.text("This magazine was procedurally generated using p5.js, p5.riso.js, and the Wikipedia API. All opinions expressed within are solely those of the algorithm. Previous issues are not available on demand but you might get lucky.", aboutX, aboutY+40, 1000);
 
             p8Image = ditherImage(articleImages[params["page8"]["imageSrc"]], 'none', 100);
@@ -397,6 +436,23 @@ function draw() {
         light.pop();
         dark.pop();
 
+
+        // REGSITRATION
+        dark.push();
+        light.push();
+            dark.noFill();
+            light.noFill();
+            dark.strokeWeight(2);
+            light.strokeWeight(2);
+            dark.circle(2550, 1650, 50);
+            light.circle(2550, 1650, 50);
+            dark.line(2510,1650, 2590, 1650);
+            dark.line(2550,1610, 2550, 1690);
+            light.line(2510,1650, 2590, 1650);
+            light.line(2550,1610, 2550, 1690);
+
+        light.pop();
+        dark.pop();
         drawRiso();
     }
     // If fewer than 4 articles with images and snippets are found
